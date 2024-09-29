@@ -30,7 +30,7 @@
 import express, { Express, Request, Response } from 'express';
 
 const PORT: number = Number(process.env.PORT) || 5000;
-const app: Express = express();
+const app = express();
 
 app.use(express.json());
 app.get('/', (req: Request, res: Response) => {
