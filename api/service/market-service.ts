@@ -26,6 +26,7 @@ async getAllProducts(sortObj: ISortObj, from: number, to: number) {
         const result = ( this
           .removeNesting(products)
           .map((product: any) => new ProductCatalog(product)))
+          .sort((currentProduct: ProductCatalog, nextProduct: ProductCatalog)=>{return currentProduct.price - nextProduct.price})
           .slice(from, to);
 
           
@@ -53,7 +54,6 @@ async getProductsByFilters(
   let products = await ProductModel
     .find({ category })
     .populate('item_id') 
-    .sort(sortObj);
 
   products = products.filter(product => {
     const item = product.item_id as any;
@@ -79,6 +79,7 @@ async getProductsByFilters(
   const result = this
     .removeNesting(products)
     .map((product: any) => new ProductCatalog(product))
+    .sort((currentProduct: ProductCatalog, nextProduct: ProductCatalog)=>{return currentProduct.price - nextProduct.price})
     .slice(from, to);
 
 
