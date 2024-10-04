@@ -55,6 +55,7 @@ async getProductsByFilters(
     .find({ category })
     .populate('item_id') 
 
+
   products = products.filter(product => {
     const item = product.item_id as any;
     return item.price >= priceBorders[0] && item.price <= priceBorders[1];
