@@ -8,11 +8,11 @@ import ProductSingle from '../dtos/product-item-dto';
 
 class MarketService {
 
-async getAllProducts(sortObj: ISortObj, from: number, to: number) {
+async getAllProducts(sortValue: string, sortDirection: number, from: number, to: number) {
     const products = await ProductModel
         .find()
         .populate('item_id')
-        .sort(sortObj)
+        
 
         const prices = products.map(product => {
           const item = product.item_id as any;
@@ -26,7 +26,7 @@ async getAllProducts(sortObj: ISortObj, from: number, to: number) {
         const result = ( this
           .removeNesting(products)
           .map((product: any) => new ProductCatalog(product)))
-          .sort((currentProduct: ProductCatalog, nextProduct: ProductCatalog)=>{return currentProduct.price - nextProduct.price})
+          .sort((curr:ProductCatalog, next:ProductCatalog) => this.sortFun(sortValue, sortDirection, curr, next))
           .slice(from, to);
 
           
@@ -43,11 +43,12 @@ async getProductById(id: string) {
 }
 
 async getProductsByFilters(
-  category: string, 
-  from: number, 
+  category: string,
+  from: number,
   to: number,
   priceBorders: [number, number], 
-  sortObj: ISortObj,
+  sortValue: string, 
+  sortDirection: number,
   type?: string
 ) {
 
@@ -80,7 +81,7 @@ async getProductsByFilters(
   const result = this
     .removeNesting(products)
     .map((product: any) => new ProductCatalog(product))
-    .sort((currentProduct: ProductCatalog, nextProduct: ProductCatalog)=>{return currentProduct.price - nextProduct.price})
+    .sort((curr:ProductCatalog, next:ProductCatalog) => this.sortFun(sortValue, sortDirection, curr, next))
     .slice(from, to);
 
 
@@ -135,6 +136,17 @@ async getProductsByFilters(
         };
       }
     }
+
+    sortFun(sortBy: string, sortDirection: number, curr: ProductCatalog, next: ProductCatalog) {
+      const currValue = curr[sortBy as keyof ProductCatalog];
+      const nextValue = next[sortBy as keyof ProductCatalog];
+  
+      if (sortDirection === 1) {
+          return currValue > nextValue ? 1 : -1;
+      } else {
+          return currValue < nextValue ? 1 : -1;
+      }
+  }
 }
 
 export default new MarketService();

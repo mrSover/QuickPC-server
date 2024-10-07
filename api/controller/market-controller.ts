@@ -15,16 +15,15 @@ class MarketController {
             const maxPrice = Number(req.query.maxPrice) || Infinity;
             const sortValue = req.query.sortValue as string || 'is_hot';
             const sortDirection: 1 | -1 = (Number(req.query.sortDirection) || 1) as 1 | -1;
-            const sortObj: ISortObj = { [sortValue]: sortDirection };
             const from = Number(req.query.from) || 0;
             const to = Number(req.query.to) || 12;
     
             let products;
     
             if (category) {
-                products = await marketService.getProductsByFilters(category, from, to, [minPrice, maxPrice], sortObj, type);
+                products = await marketService.getProductsByFilters(category, from, to, [minPrice, maxPrice], sortValue, sortDirection, type);
             } else {
-                products = await marketService.getAllProducts(sortObj, from, to);
+                products = await marketService.getAllProducts(sortValue, sortDirection, from, to);
             }
     
             return res.status(200).json(products);
