@@ -1,0 +1,25 @@
+.firstpage {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 30px;
+
+  &__item {
+    border: 1px solid #3d815f;
+    border-radius: 20px;
+    backdrop-filter: blur(15px);
+    background: #2e757044;
+
+    &.first {
+      grid-row-start: 1;
+      grid-row-end: 3;
+      height: 50vh;
+    }
+
+    &.last {
+      grid-column-start: 2;
+      grid-column-end: 4;
+    }
+  }
+
+}
